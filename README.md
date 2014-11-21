@@ -8,7 +8,6 @@ I published this project ___for my own purpose___ - it appears that
 [Meteor](https://www.meteor.com/) in all it's awesomeness does not support local
 npm packages and it probably never will.
 
-I shall add tests and examples a.s.a.p.
 There will be probably some kind of _Aggregation Cursor_
 support added in future, too.
 

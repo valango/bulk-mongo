@@ -50,6 +50,16 @@ module.exports = function create(db) {
       init = function () {bulkOp = collection.initializeUnorderedBulkOp();};
       init();
 
+      output.once('finish', function () {
+        if (counter % bulkSize) {
+          bulkOp.execute(function (e) {
+            if (e) {
+              throw e;
+            }
+          });
+        }
+      });
+
       output._write = function (obj, enc, cb) {
 
         bulkOp.insert(obj);

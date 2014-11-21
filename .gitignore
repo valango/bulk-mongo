@@ -2,5 +2,4 @@
 .DS_Dtore
 *~
 node_modules
-
-
+coverage
