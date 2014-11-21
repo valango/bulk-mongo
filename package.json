@@ -1,6 +1,6 @@
 {
   "name": "bulk-mongo",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Writable object stream using MongoDb bulk mode",
   "main": "index.js",
   "engines": {

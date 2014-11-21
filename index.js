@@ -32,23 +32,25 @@ module.exports = function create(db) {
    * @returns {stream.Writable}
    * @constructor
    */
-  function WriteStream(collectionName, options) {
+  function factory(collectionName, options) {
 
-    var streamOptions = _.defaults(options, streamDefaults)
-      , stream = new stream.Writable(streamOptions)
+    options = options || {};
+
+    var output = new stream.Writable(_.defaults(options, streamDefaults))
       , collection = db.collection(collectionName)
-      , bulkSize = ~ ~ _.defaults(options, {bulkSize: 1000})
-      , bulkOp, counter, init, state
+      , bulkSize, bulkOp, counter, init, state
       ;
+
+    bulkSize = typeof (bulkSize = options.bulkSize) === 'undefined' && 1000;
 
     if (bulkSize > 0) {
 
-      state = stream._writableState;
+      state = output._writableState;
       counter = 0;
       init = function () {bulkOp = collection.initializeUnorderedBulkOp();};
       init();
 
-      stream._write = function (obj, enc, cb) {
+      output._write = function (obj, enc, cb) {
 
         bulkOp.insert(obj);
 
@@ -67,15 +69,15 @@ module.exports = function create(db) {
 
     } else {
       //  A non-bulk option is here for comparison only - have fun!
-      stream._write = function (obj, enc, cb) {
+      output._write = function (obj, enc, cb) {
         collection.insert(obj, cb);
       };
     }
 
-    return stream;
+    return output;
   }
 
-  return WriteStream;
+  return factory;
 };
 
 
