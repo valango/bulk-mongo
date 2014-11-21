@@ -1,0 +1,31 @@
+{
+  "name": "bulk-mongo",
+  "version": "0.0.2",
+  "description": "Writable object stream using MongoDb bulk mode",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 0.10.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/villu357/bulk-mongo.git"
+  },
+  "keywords": [
+    "mongodb",
+    "stream",
+    "writable"
+  ],
+  "author": "Villem Alango",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/villu357/bulk-mongo/issues"
+  },
+  "homepage": "https://github.com/villu357/bulk-mongo",
+  "dependencies": {
+    "mongodb": "^1.4.20",
+    "underscore": "^1.7.0"
+  }
+}
