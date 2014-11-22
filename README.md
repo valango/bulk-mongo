@@ -8,8 +8,14 @@ I published this project ___for my own purpose___ - it appears that
 [Meteor](https://www.meteor.com/) in all it's awesomeness *does not* support
 local `npm` packages and it probably never will.
 
-I am not really familiar wit MongoDb and it's drivers, so it took some effort
+I am not really familiar with MongoDb and it's drivers, so it took some effort
 to make use of the bulk ops feature. So maybe it is useful to other folks around.
+
+## Installation
+
+```
+  npm install bulk-mongo
+```
 
 ## Usage
 
@@ -17,7 +23,7 @@ to make use of the bulk ops feature. So maybe it is useful to other folks around
   var bulkMongo = require('bulk-mongo');
   var factory_function = bulkMongo(dbInstance);
   var bulkWriter = factory_function(targetCollection);
-  sourceStream.pipe(bulkDrain);
+  sourceStream.pipe(bulkWriter);
 ```
 
 Of course the code above can be compressed into just two lines.
