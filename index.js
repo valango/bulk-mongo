@@ -8,16 +8,18 @@
 
 var _      = require('underscore')
   , stream = require('stream')
+  , debug  = require('debug')('bulk-mongo')
   ;
 
 var streamDefaults = {
       objectMode:    true,
       highWaterMark: 16
     }
+  , BULK_SIZE      = 1000   //  Max number of inserts before bulk.execute()
   ;
 
 /**
- * Return factory function for a writable object stream into a collection.
+ * Return a factory function for a writable object stream into a collection.
  *
  * @param {Db} db
  * @returns {Function}
@@ -27,34 +29,42 @@ module.exports = function create(db) {
   /**
    *  Create an instance of a writable object stream.
    *
-   * @param {string}  collectionName
+   * @param {collection|string}  collection
    * @param {object}  options   - bulkSize defaults to 1000
    * @returns {stream.Writable}
    * @constructor
    */
-  function factory(collectionName, options) {
+  function factory(collection, options) {
 
     options = options || {};
 
     var output = new stream.Writable(_.defaults(options, streamDefaults))
-      , collection = db.collection(collectionName)
-      , bulkSize, bulkOp, counter, init, state
+      , coll = typeof collection === 'string' ?
+          db.collection(collection) : collection
+      , bulkSize, bulkOp, counter, init
       ;
 
-    bulkSize = typeof (bulkSize = options.bulkSize) === 'undefined' && 1000;
+    bulkSize = options.bulkSize;
+    bulkSize = _.isUndefined(bulkSize) ? BULK_SIZE : ~ ~ bulkSize;
 
     if (bulkSize > 0) {
-
-      state = output._writableState;
+      debug('of ' + bulkSize + ' is created');
       counter = 0;
-      init = function () {bulkOp = collection.initializeUnorderedBulkOp();};
+      init = function () {bulkOp = coll.initializeUnorderedBulkOp();};
       init();
 
       output.once('finish', function () {
+        debug('is finishing');
         if (counter % bulkSize) {
-          bulkOp.execute(function (e) {
-            if (e) {
-              throw e;
+          debug('writing ' + (counter % bulkSize) + ' bytes');
+          bulkOp.execute(function (e, d) {
+            if (e) {    // Could not create this error so far...
+              if (! output.listeners('error')) {
+                throw e;
+              }
+              output.emit('error', e);
+            } else {
+              output.emit('inserts', d);
             }
           });
         }
@@ -64,13 +74,19 @@ module.exports = function create(db) {
 
         bulkOp.insert(obj);
 
-        //  We must execute when bulkSize has been reached or
-        // when stream.end() is called. The 'ending' status flag will be set
-        // in this case (see endWritable() in _stream_writable.js).
-        if ((++ counter % bulkSize) === 0 || state.ending) {
-          bulkOp.execute(function (e, r) {
-            init();
-            cb(e, r);
+        //  We must execute when bulkSize has been reached.
+        if ((++ counter % bulkSize) === 0) {
+          debug('writing ' + bulkSize + ' bytes');
+          bulkOp.execute(function (e, d) {
+            if (! e) {
+              output.emit('inserts', d);
+              try {
+                init();
+              } catch (err) {
+                e = err;
+              }
+            }
+            cb(e, d);
           });
         } else {
           cb(null);
@@ -78,9 +94,10 @@ module.exports = function create(db) {
       };
 
     } else {
+      debug('without bulk-ops is created ;-)');
       //  A non-bulk option is here for comparison only - have fun!
       output._write = function (obj, enc, cb) {
-        collection.insert(obj, cb);
+        coll.insert(obj, cb);
       };
     }
 
@@ -89,5 +106,3 @@ module.exports = function create(db) {
 
   return factory;
 };
-
-
