@@ -2,3 +2,4 @@ coverage/
 test/
 out/
 .travis.yml
+*.log

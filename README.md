@@ -1,7 +1,5 @@
 # bulk-mongo
 
-[![Build Status](https://travis-ci.org/villu357/bulk-mongo.svg?branch=master)](https://travis-ci.org/villu357/bulk-mongo)
-
 Writable object stream on top of MongoDb using bulk mode for speed.
 
 Depending on the nature of data, the gain in speed is about 8x
@@ -66,6 +64,11 @@ be written into the database.
 
 Because the asynchronous bulk write operation might be triggered by 'finish'
 event, the 'finish' itself can not guarantee the data is synced.
+
+## Notes
+
+Travis tests in github do not run yet - there is a problem with Travis
+configuration I have not figured out so far ;-)
 
 ## Links
 
