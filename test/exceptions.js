@@ -13,7 +13,7 @@ var testable  = require('..')
   , should    = require('should')
   , source    = require('./stubs/source.js')
 
-  , mongoPath = 'mongodb://localhost:27017'
+  , mongoPath = 'mongodb://localhost:27017/test'
   , collName  = 'tmp_bulk_mongo_test'
   , factory
   , db
@@ -77,18 +77,22 @@ describe('UnorderedBulkOperation#execute() errors', function () {
 
 function test_piping_err(srcLen, dstLen, cond, done) {
 
-  var errs = 0, onEnding = (cond === 'onEnd');
+  var errs = 0, finish = 0, onEnding = (cond === 'onEnd');
 
   var dst = factory(coll, {bulkSize: dstLen});
   var src = source(srcLen);
 
   dst.on('finish', function () {
-    errs.should.be.equal(1);
+    ++finish;
+  });
+  dst.on('done', function () {
+    errs.should.be.equal(1, 'error count');
+    finish.should.be.equal(1, "'done' event should follow 'finish'");
     done();
   });
   dst.on('error', function (e) {
     ++ errs;
-    dst._writableState.ending.should.be.equal(onEnding);
+    dst._writableState.ending.should.be.equal(onEnding, 'state.ending not ' + onEnding);
     onEnding || done();   // Error will block the ride, so we have to force.
   });
   dst.write({some: true});  // Make sure we have the 1st initialization done

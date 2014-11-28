@@ -11,7 +11,7 @@ var testable  = require('..')
   , should    = require('should')
   , source    = require('./stubs/source.js')
 
-  , mongoPath = 'mongodb://localhost:27017'
+  , mongoPath = 'mongodb://localhost:27017/test'
   , collName  = 'tmp_bulk_mongo_test'
   , factory
   , db
@@ -40,12 +40,18 @@ function db_clean(cb) {
 
 function do_before(cb) {
   mongodb.MongoClient.connect(mongoPath, function (e, d) {
-    if (! e) {
-      db = d;
-      coll = db.collection(collName);
-      factory = testable(db);
+    if (e) {
+      return cb();
     }
-    cb(e);
+    db = d;
+    factory = testable(db);
+    coll = db.collection(collName);
+    coll.remove(function (e) {  // Clean junk, ignore errors
+      if (e) {
+        console.log(e);
+      }
+      cb();
+    })
   });
 }
 
@@ -108,14 +114,16 @@ function tests_write(label, options) {
           done();
         });
       });
-    }
 
-    it('should end normally', function (done) {
-      //  This is somewhat ugly hack here -
-      // end() will actually emit 'finish', which, in turn will
-      // launch asynchronous execution of bulk operation...
-      dst.end(function () {setTimeout(done, 50);});
-    });
+      it('should end normally', function (done) {
+        dst.once('inserts', function (d) {
+          d.isOk().should.be.ok;
+          d.nInserted.should.be.equal(2);
+          done();
+        });
+        dst.end();
+      });
+    }
 
     it('... and have written all the data out', function (done) {
       coll.stats(function (err, stats) {
@@ -141,16 +149,9 @@ function tests_pipe(label, options) {
     after(do_after);
 
     it('short pipe should work', function (done) {
-      var err = null;
       dst = makeDst(coll, options);
+      dst.on('done', done);
       src = source(10);
-      dst.on('finish', function () {
-        setTimeout(function () {
-          nInserted.should.be.equal(bulkMode ? 10 : 0);
-          done(err);
-        }, 10);
-      });
-      src.on('end', function () {dst.end();});
       src.pipe(dst);
     });
 
@@ -166,11 +167,9 @@ function tests_pipe(label, options) {
 
     it('long pipe should work', function (done) {
       dst = makeDst(coll, options);
-      src = source(1555);
-      dst.on('finish', function () {
-        setTimeout(done, 50);
-      });
+      dst.on('done', done);
       dst.on('error', function (e) {done(e);});
+      src = source(1555);
       src.pipe(dst);
     });
 

@@ -9,7 +9,7 @@
 var testable  = require('..')
   , mongodb   = require('mongodb')
 
-  , mongoPath = 'mongodb://localhost:27017'
+  , mongoPath = 'mongodb://localhost:27017/test'
   , collName  = 'tmp_bulk_mongo_test'
   ;
 
@@ -22,9 +22,10 @@ client.connect(mongoPath, function (e, db) {
   }
   var drain = testable(db)(collName);
 
-  drain.on('drain', function () {console.log('drain');});
-  drain.on('prefinish', function () {console.log('prefinish');});
-  drain.on('finish', function () {console.log('finish');});
+  drain.on('drain', function () {console.log('d.rain');});
+  drain.on('prefinish', function () {console.log('d.prefinish');});
+  drain.on('finish', function () {console.log('d.finish');});
+  drain.on('done', function () {console.log('d.done');});
 
   drain.write({data: 1});
   drain.write({data: 2});
