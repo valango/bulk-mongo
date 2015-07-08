@@ -9,7 +9,7 @@
   "scripts": {
     "test":        "mocha --check-leaks --reporter spec --bail test/[^p]*.js",
     "test-cov":    "istanbul cover node_modules/mocha/bin/_mocha -- --check-leaks --reporter dot test/[^p]*.js",
-    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --check-leaks --reporter spec  test/exceptions.js test/writeops.js",
+    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --check-leaks -R spec --t 20000 test/exceptions.js test/writeops.js",
     "test-perf":   "mocha --bail --timeout 120000 test/perf*.js"
   },
   "repository": {
