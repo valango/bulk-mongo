@@ -8,7 +8,8 @@
 var testable  = require('..')
   , stream    = require('stream')
   , mongodb   = require('mongodb')
-    //, should    = require('should')
+    /* jshint unused: false */
+  , should    = require('should')
   , source    = require('./stubs/source.js')
 
   , mongoPath = 'mongodb://localhost:27017/test'
@@ -128,7 +129,7 @@ function tests_write(label, options) {
     it('... and have written all the data out', function (done) {
       coll.stats(function (err, stats) {
         if (!err) {
-          stats.count.should.be.equal(2);
+          stats.count.should.be.equal(bulkMode ? 2 : 1); // fix: 150708:23:18
           nInserts.should.be.equal(bulkMode ? 1 : 0);
           nInserted.should.be.equal(bulkMode ? 2 : 0);
         }

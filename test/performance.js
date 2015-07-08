@@ -1,10 +1,13 @@
 //
+//  This should serve as an evidence of what all this stuff is good for.
+//
 'use strict';
 
 var testable  = require('..')
   //, stream    = require('stream')
   , mongodb   = require('mongodb')
-  //, should    = require('should')
+    /* jshint unused: false */
+  , should    = require('should')
   , source    = require('./stubs/source.js')
 
   , mongoPath = 'mongodb://localhost:27017/test'

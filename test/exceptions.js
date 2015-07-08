@@ -7,10 +7,10 @@
 'use strict';
 
 var testable  = require('..')
-  //, stream    = require('stream')
   , mongodb   = require('mongodb')
   , sinon     = require('sinon')
-  //, should    = require('should')
+    /* jshint unused: false */
+  , should    = require('should')
   , source    = require('./stubs/source.js')
 
   , mongoPath = 'mongodb://localhost:27017/test'
@@ -24,7 +24,7 @@ var testable  = require('..')
 
 function do_before(cb) {
   mongodb.MongoClient.connect(mongoPath, function (e, d) {
-    if (! e) {
+    if (!e) {
       db = d;
       coll = db.collection(collName);
       factory = testable(db);
@@ -90,8 +90,8 @@ function test_piping_err(srcLen, dstLen, cond, done) {
     finish.should.be.equal(1, '"done" event should follow "finish"');
     done();
   });
-  dst.on('error', function (/*e*/) {
-    ++ errs;
+  dst.on('error', function () {
+    ++errs;
     dst._writableState.ending.should.be.equal(onEnding, 'state.ending not ' + onEnding);
     onEnding || done();   // Error will block the ride, so we have to force.
   });

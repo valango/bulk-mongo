@@ -6,8 +6,6 @@
 
 Writable object stream on top of MongoDb using bulk mode for speed.
 
-**NB**[150708]: Tests here are buggy :/ and will be fixed soon!
-
 Depending on the nature of data, the gain in speed is about 8x
 
 ## Installation
@@ -73,8 +71,13 @@ event, the 'finish' itself can not guarantee the data is synced.
 
 ## Notes
 
-Travis tests in github do not run yet - there is a problem with Travis
-configuration I have not figured out so far ;-)
+To run tests or examples, make sure you have mongodb running -
+probably you'll need something like this:
+```
+  mongod > mongod.log & 
+```
+before running tests. It could be handy to run *mongod* in 
+a separate terminal window.
 
 ## Links
 
