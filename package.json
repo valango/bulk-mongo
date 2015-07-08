@@ -1,6 +1,6 @@
 {
   "name": "bulk-mongo",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "Writable object stream using MongoDb bulk mode",
   "main": "index.js",
   "engines": {
@@ -9,7 +9,7 @@
   "scripts": {
     "test":        "mocha --check-leaks --reporter spec --bail test/[^p]*.js",
     "test-cov":    "istanbul cover node_modules/mocha/bin/_mocha -- --check-leaks --reporter dot test/[^p]*.js",
-    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --check-leaks -R spec --t 20000 test/exceptions.js test/writeops.js",
+    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --check-leaks -R spec --t 50000 test/exceptions.js test/writeops.js",
     "test-perf":   "mocha --bail --timeout 120000 test/perf*.js"
   },
   "repository": {
