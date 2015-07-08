@@ -29,13 +29,13 @@
   "homepage": "https://github.com/villu357/bulk-mongo",
   "dependencies": {
     "debug": "^2.1.0",
-    "mongodb": "^1.4.20",
+    "mongodb": "^1.4.38",
     "underscore": "^1.7.0"
   },
   "devDependencies": {
     "istanbul": "^0.3.2",
     "mocha": "^2.0.1",
-    "should": "^4.3.0",
+    "should": "^7.0.1",
     "sinon": "^1.12.1"
   }
 }
