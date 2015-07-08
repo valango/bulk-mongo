@@ -2,7 +2,7 @@
 
 Writable object stream on top of MongoDb using bulk mode for speed.
 
-**NB** [150708]: Tests here are buggy :/ and will be fixed soon!
+**NB**[150708]: Tests here are buggy :/ and will be fixed soon!
 
 Depending on the nature of data, the gain in speed is about 8x
 

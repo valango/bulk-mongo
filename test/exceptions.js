@@ -7,10 +7,10 @@
 'use strict';
 
 var testable  = require('..')
-  , stream    = require('stream')
+  //, stream    = require('stream')
   , mongodb   = require('mongodb')
   , sinon     = require('sinon')
-  , should    = require('should')
+  //, should    = require('should')
   , source    = require('./stubs/source.js')
 
   , mongoPath = 'mongodb://localhost:27017/test'
@@ -77,7 +77,7 @@ describe('UnorderedBulkOperation#execute() errors', function () {
 
 function test_piping_err(srcLen, dstLen, cond, done) {
 
-  var errs = 0, finish = 0, onEnding = (cond === 'onEnd');
+  var errs = 0, finish = 0, onEnding = cond === 'onEnd';
 
   var dst = factory(coll, {bulkSize: dstLen});
   var src = source(srcLen);
@@ -87,16 +87,16 @@ function test_piping_err(srcLen, dstLen, cond, done) {
   });
   dst.on('done', function () {
     errs.should.be.equal(1, 'error count');
-    finish.should.be.equal(1, "'done' event should follow 'finish'");
+    finish.should.be.equal(1, '"done" event should follow "finish"');
     done();
   });
-  dst.on('error', function (e) {
+  dst.on('error', function (/*e*/) {
     ++ errs;
     dst._writableState.ending.should.be.equal(onEnding, 'state.ending not ' + onEnding);
     onEnding || done();   // Error will block the ride, so we have to force.
   });
   dst.write({some: true});  // Make sure we have the 1st initialization done
   stubExecute.callsArgWith(0, cond.match('onInit') ? null : 'failure', null);
-  failStubInit = (cond === 'onInit2');
+  failStubInit = cond === 'onInit2';
   src.pipe(dst);
 }

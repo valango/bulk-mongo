@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/villu357/bulk-mongo.git"
+    "url": "https://github.com/valango/bulk-mongo.git"
   },
   "keywords": [
     "mongodb",
@@ -24,17 +24,22 @@
   "author": "Villem Alango",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/villu357/bulk-mongo/issues"
+    "url": "https://github.com/valango/bulk-mongo/issues"
   },
-  "homepage": "https://github.com/villu357/bulk-mongo",
+  "homepage": "https://github.com/valango/bulk-mongo",
   "dependencies": {
     "debug": "^2.1.0",
     "mongodb": "^1.4.38",
     "underscore": "^1.7.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-ignore": "^1.2.1",
+    "gulp-jshint": "^1.11.2",
     "istanbul": "^0.3.2",
+    "jshint-stylish": "^2.0.1",
     "mocha": "^2.0.1",
+    "path": "^0.11.14",
     "should": "^7.0.1",
     "sinon": "^1.12.1"
   }

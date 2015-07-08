@@ -2,9 +2,9 @@
 'use strict';
 
 var testable  = require('..')
-  , stream    = require('stream')
+  //, stream    = require('stream')
   , mongodb   = require('mongodb')
-  , should    = require('should')
+  //, should    = require('should')
   , source    = require('./stubs/source.js')
 
   , mongoPath = 'mongodb://localhost:27017/test'
@@ -13,7 +13,7 @@ var testable  = require('..')
   , factory
   , db
   , coll
-  , src, dst
+  , dst
   ;
 
 function db_close() {
@@ -24,7 +24,7 @@ function db_close() {
 }
 
 function db_clean(cb) {
-  db.dropCollection(collName, function (e) {
+  db.dropCollection(collName, function () {
     db_close();
     cb(); // Ignore 'ns not found' error if collection did not exist
   });
@@ -43,7 +43,7 @@ function do_before(cb) {
         console.log(e);
       }
       cb();
-    })
+    });
   });
 }
 
@@ -75,7 +75,7 @@ describe('Measuring the speed of storing ' + amount + ' objects', function () {
       done();
     });
     t0 = Date.now();
-    source(amount).pipe(dst)
+    source(amount).pipe(dst);
   });
 
   it('writing in non-bulk mode', function (done) {
@@ -88,7 +88,7 @@ describe('Measuring the speed of storing ' + amount + ' objects', function () {
       done();
     });
     t0 = Date.now();
-    source(amount).pipe(dst)
+    source(amount).pipe(dst);
   });
 
   it('... so the difference should be evident', function () {

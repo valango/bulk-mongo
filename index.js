@@ -40,14 +40,16 @@ module.exports = function create(db) {
 
     options = options || {};
 
-    var output = new stream.Writable(_.defaults(options, streamDefaults))
-      , coll = typeof collection === 'string' ?
-          db.collection(collection) : collection
-      , bulkSize, bulkOp, counter = 0, init
+    var output  = new stream.Writable(_.defaults(options, streamDefaults))
+      , coll    = typeof collection === 'string' ?
+          db.collection(collection) :
+          collection
+      , counter = 0
+      , bulkSize, bulkOp, init
       ;
 
     bulkSize = options.bulkSize;
-    bulkSize = _.isUndefined(bulkSize) ? BULK_SIZE : ~ ~ bulkSize;
+    bulkSize = _.isUndefined(bulkSize) ? BULK_SIZE : bulkSize * 1;
 
     function post(event, arg) {
       process.nextTick(output.emit.bind(output, event, arg));
@@ -55,7 +57,9 @@ module.exports = function create(db) {
 
     if (bulkSize > 0) {
       debug('of ' + bulkSize + ' is created');
-      init = function () {bulkOp = coll.initializeUnorderedBulkOp();};
+      init = function () {
+        bulkOp = coll.initializeUnorderedBulkOp();
+      };
       init();
 
       output._write = function (obj, enc, cb) {
@@ -63,10 +67,10 @@ module.exports = function create(db) {
         bulkOp.insert(obj);
 
         //  We must execute when bulkSize has been reached.
-        if ((++ counter % bulkSize) === 0) {
+        if (++counter % bulkSize === 0) {
           debug('writing ' + bulkSize + ' bytes');
           bulkOp.execute(function (e, d) {
-            if (! e) {
+            if (!e) {
               output.emit('inserts', d);
               try {
                 init();
@@ -93,10 +97,10 @@ module.exports = function create(db) {
     output.once('finish', function () {
       debug('is finishing');
       if (counter && counter % bulkSize) {
-        debug('writing ' + (counter % bulkSize) + ' bytes');
+        debug('writing ' + counter % bulkSize + ' bytes');
         bulkOp.execute(function (e, d) {
           if (e) {    // Could not create this error so far...
-            if (! output.listeners('error')) {
+            if (!output.listeners('error')) {
               throw e;
             }
             post('error', e);
