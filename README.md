@@ -1,5 +1,9 @@
 # bulk-mongo
 
+[![GitHub version](https://badge.fury.io/gh/valango%2Fbulk-mongo.svg)](http://badge.fury.io/gh/valango%2Fbulk-mongo)
+[![Build Status](https://travis-ci.org/valango/bulk-mongo.svg?branch=master)](https://travis-ci.org/valango/bulk-mongo.svg)
+[![Coverage Status](https://coveralls.io/repos/valango/bulk-mongo/badge.svg?branch=master&service=github)](https://coveralls.io/github/valango/bulk-mongo?branch=master)
+
 Writable object stream on top of MongoDb using bulk mode for speed.
 
 **NB**[150708]: Tests here are buggy :/ and will be fixed soon!
