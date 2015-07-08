@@ -108,8 +108,7 @@ function tests_write(label, options) {
         var coll = db.collection(collName);
         coll.stats(function (err, stats) {
           if (err) {
-            console.log('***ERR***', err);
-            return done(err.errmsg.indexOf('not found.') > 0 ? null : err);
+            return done(err.errmsg.indexOf(' not found') > 0 ? null : err);
           }
           stats.count.should.be.equal(0);
           nInserted.should.be.equal(0);
